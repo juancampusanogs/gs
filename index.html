@@ -7,28 +7,41 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
+
 :root{
-  --azul-principal:#0f2f57;
-  --azul-suave:#eaf2fb;
-  --verde-principal:#008c72;
-  --verde-suave:#e8f7f2;
+
+  /* ====================================================== */
+  /* COLORES CORPORATIVOS */
+  /* ====================================================== */
+
+  --azul:#0f2f57;
+  --azul-suave:#edf4fb;
+
+  --verde:#008c72;
+  --verde-suave:#e8f8f3;
+
   --dorado:#c9a646;
-  --dorado-suave:#fbf6e6;
-  --gris-texto:#263746;
+  --dorado-suave:#fdf8eb;
+
+  --gris:#374151;
   --gris-nota:#6b7280;
 }
 
+/* ====================================================== */
+/* GENERAL */
+/* ====================================================== */
+
 body{
   margin:0;
-  font-family:Arial, Helvetica, sans-serif;
   background:#f4f6f8;
-  color:var(--gris-texto);
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--gris);
 }
 
 .contenedor{
-  max-width:1400px;
+  max-width:1500px;
   margin:25px auto;
-  padding:25px;
+  padding:20px;
 }
 
 .titulo{
@@ -39,7 +52,7 @@ body{
 .titulo h1{
   margin:0;
   font-size:34px;
-  color:var(--azul-principal);
+  color:var(--azul);
 }
 
 .titulo p{
@@ -47,28 +60,36 @@ body{
   color:#64748b;
 }
 
+/* ====================================================== */
+/* BLOQUES */
+/* ====================================================== */
+
 .bloque{
-  background:#ffffff;
+  background:white;
   border-radius:18px;
   padding:22px;
-  margin-bottom:28px;
-  box-shadow:0 8px 20px rgba(15,23,42,0.08);
+  margin-bottom:30px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.06);
 }
 
 .bloque h2{
   margin-top:0;
-  margin-bottom:18px;
-  font-size:19px;
+  margin-bottom:20px;
+  font-size:20px;
   text-transform:uppercase;
   letter-spacing:1px;
 }
 
+/* ====================================================== */
+/* ESTRATÉGICOS */
+/* ====================================================== */
+
 .estrategico{
-  border-left:8px solid var(--azul-principal);
+  border-left:8px solid var(--azul);
 }
 
 .operativo{
-  border-left:8px solid var(--verde-principal);
+  border-left:8px solid var(--verde);
 }
 
 .apoyo{
@@ -76,34 +97,46 @@ body{
   background:var(--dorado-suave);
 }
 
+/* ====================================================== */
+/* GRID */
+/* ====================================================== */
+
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
   gap:16px;
 }
 
+/* ====================================================== */
+/* TARJETA */
+/* ====================================================== */
+
 .proceso{
-  background:#ffffff;
+  background:white;
   border-radius:16px;
   overflow:hidden;
-  border:1px solid #dbe3ef;
+  border:1px solid #dce3ea;
 }
+
+/* ====================================================== */
+/* HEADER */
+/* ====================================================== */
 
 .proceso-header{
   padding:14px 16px;
-  color:white;
-  font-weight:bold;
   display:flex;
   align-items:center;
   gap:10px;
+  color:white;
+  font-weight:bold;
 }
 
 .estrategico .proceso-header{
-  background:var(--azul-principal);
+  background:var(--azul);
 }
 
 .operativo .proceso-header{
-  background:var(--verde-principal);
+  background:var(--verde);
 }
 
 .numero{
@@ -118,40 +151,56 @@ body{
 }
 
 .estrategico .numero{
-  color:var(--azul-principal);
+  color:var(--azul);
 }
 
 .operativo .numero{
-  color:var(--verde-principal);
+  color:var(--verde);
 }
+
+/* ====================================================== */
+/* SUBPROCESOS */
+/* ====================================================== */
 
 .subprocesos{
   padding:14px 16px;
 }
 
 .subproceso{
+  margin-bottom:10px;
   padding:10px 12px;
-  border-radius:9px;
-  margin-bottom:9px;
-  font-size:14px;
+  border-radius:10px;
+  font-size:15px;
 }
 
 .estrategico .subproceso{
   background:var(--azul-suave);
-  border-left:4px solid var(--azul-principal);
+  border-left:4px solid var(--azul);
 }
 
 .operativo .subproceso{
   background:var(--verde-suave);
-  border-left:4px solid var(--verde-principal);
+  border-left:4px solid var(--verde);
 }
 
-.area-nota{
-  margin-left:6px;
+/* ====================================================== */
+/* ÁREA EN LATERAL */
+/* ====================================================== */
+
+.area-inline{
+
+  margin-left:8px;
+
   font-size:12px;
+
   font-style:italic;
+
   color:var(--gris-nota);
 }
+
+/* ====================================================== */
+/* APOYO */
+/* ====================================================== */
 
 .apoyo-vertical{
   display:flex;
@@ -160,57 +209,107 @@ body{
 }
 
 .linea-apoyo{
+
   display:grid;
-  grid-template-columns:70px 320px 1fr;
-  align-items:start;
-  background:#ffffff;
+
+  grid-template-columns:
+      60px
+      300px
+      1fr;
+
+  align-items:flex-start;
+
+  background:white;
+
   border:1px solid var(--dorado);
-  border-radius:8px;
+
+  border-radius:10px;
+
   padding:12px 16px;
 }
 
+/* ====================================================== */
+/* NUMERO APOYO */
+/* ====================================================== */
+
 .codigo-proceso{
+
   font-size:22px;
+
   font-weight:bold;
-  color:#8a6b12;
+
+  color:#9a6a00;
 }
+
+/* ====================================================== */
+/* TITULO APOYO */
+/* ====================================================== */
 
 .titulo-proceso{
+
   font-size:18px;
+
   font-weight:bold;
-  color:var(--azul-principal);
+
+  color:var(--azul);
 }
+
+/* ====================================================== */
+/* DETALLE APOYO */
+/* ====================================================== */
 
 .detalle-proceso{
+
   font-size:15px;
-  color:#374151;
-  line-height:1.5;
+
+  color:var(--gris);
+
+  line-height:1.4;
 }
 
+/* ====================================================== */
+/* SUBPROCESO APOYO */
+/* ====================================================== */
+
+.item-apoyo{
+
+  display:inline-block;
+
+  margin-right:14px;
+
+  margin-bottom:4px;
+}
+
+/* ====================================================== */
+/* ÁREA ABAJO APOYO */
+/* ====================================================== */
+
 .area-apoyo{
+
   display:block;
-  margin-top:2px;
+
+  margin-top:1px;
+
   font-size:12px;
+
   font-style:italic;
+
   color:var(--gris-nota);
 }
 
-.mensaje{
-  padding:15px;
-  background:#fff3cd;
-  border:1px solid #facc15;
-  border-radius:10px;
-  color:#78350f;
-  margin-bottom:20px;
-  display:none;
-}
+/* ====================================================== */
+/* RESPONSIVE */
+/* ====================================================== */
 
 @media(max-width:900px){
+
   .linea-apoyo{
-    grid-template-columns:1fr;
-    gap:6px;
+      grid-template-columns:1fr;
+      gap:6px;
   }
+
 }
+
 </style>
 </head>
 
@@ -218,59 +317,84 @@ body{
 
 <div class="contenedor">
 
+  <!-- ====================================================== -->
+  <!-- TITULO -->
+  <!-- ====================================================== -->
+
   <div class="titulo">
+
     <h1>Mapa de Procesos</h1>
-    <p>Representación general de procesos, subprocesos y áreas responsables</p>
+
+    <p>
+      Representación general de procesos y subprocesos
+    </p>
+
   </div>
 
-  <div id="mensaje" class="mensaje"></div>
+  <!-- ====================================================== -->
+  <!-- ESTRATEGICOS -->
+  <!-- ====================================================== -->
 
   <section class="bloque estrategico">
+
     <h2>Procesos Estratégicos</h2>
+
     <div id="estrategico" class="grid"></div>
+
   </section>
+
+  <!-- ====================================================== -->
+  <!-- OPERATIVOS -->
+  <!-- ====================================================== -->
 
   <section class="bloque operativo">
+
     <h2>Procesos Operativos</h2>
+
     <div id="operativo" class="grid"></div>
+
   </section>
 
+  <!-- ====================================================== -->
+  <!-- APOYO -->
+  <!-- ====================================================== -->
+
   <section class="bloque apoyo">
+
     <h2>Procesos de Apoyo</h2>
+
     <div id="apoyo" class="apoyo-vertical"></div>
+
   </section>
 
 </div>
 
 <script>
+
 const ARCHIVO_EXCEL = "mapa_proceso.xlsx";
 
+/* ====================================================== */
+/* CARGAR EXCEL */
+/* ====================================================== */
+
 async function cargarExcel(){
-  try{
-    const respuesta = await fetch(ARCHIVO_EXCEL);
 
-    if(!respuesta.ok){
-      throw new Error("No se encontró el archivo Excel: " + ARCHIVO_EXCEL);
-    }
+  const respuesta = await fetch(ARCHIVO_EXCEL);
 
-    const datos = await respuesta.arrayBuffer();
-    const libro = XLSX.read(datos, { type:"array" });
+  const datos = await respuesta.arrayBuffer();
 
-    const hoja = libro.Sheets[libro.SheetNames[0]];
-    const filas = XLSX.utils.sheet_to_json(hoja);
+  const libro = XLSX.read(datos,{ type:"array" });
 
-    construirMapa(filas);
+  const hoja = libro.Sheets[libro.SheetNames[0]];
 
-  }catch(error){
-    const mensaje = document.getElementById("mensaje");
-    mensaje.style.display = "block";
-    mensaje.innerHTML =
-      "No se pudo cargar el Excel. Verifica que el archivo <b>" +
-      ARCHIVO_EXCEL +
-      "</b> esté en la misma carpeta del HTML. Si lo abres directamente con doble clic, puede fallar; es mejor abrirlo desde Live Server o desde el servidor web.";
-    console.error(error);
-  }
+  const filas = XLSX.utils.sheet_to_json(hoja);
+
+  construirMapa(filas);
 }
+
+/* ====================================================== */
+/* CONSTRUIR */
+/* ====================================================== */
 
 function construirMapa(filas){
 
@@ -279,112 +403,169 @@ function construirMapa(filas){
   filas.forEach(fila => {
 
     const ordenProceso = Number(fila.orden_proceso);
-    const proceso = fila.proceso_descripcion;
 
     if(!procesos[ordenProceso]){
+
       procesos[ordenProceso] = {
-        orden_proceso: ordenProceso,
-        proceso_descripcion: proceso,
+
+        orden_proceso:ordenProceso,
+
+        proceso_descripcion:fila.proceso_descripcion,
+
         subprocesos:[]
       };
     }
 
     procesos[ordenProceso].subprocesos.push({
-      orden_subproceso: Number(fila.orden_subproceso),
-      subproceso_descripcion: fila.subproceso_descripcion,
-      area_descripcion: fila.area_descripcion || ""
+
+      orden_subproceso:Number(fila.orden_subproceso),
+
+      subproceso_descripcion:fila.subproceso_descripcion,
+
+      area_descripcion:fila.area_descripcion || ""
     });
 
   });
 
   Object.values(procesos)
-    .sort((a,b) => a.orden_proceso - b.orden_proceso)
-    .forEach(proceso => {
+  .sort((a,b) => a.orden_proceso - b.orden_proceso)
+  .forEach(proceso => {
 
-      proceso.subprocesos.sort((a,b) => a.orden_subproceso - b.orden_subproceso);
+      proceso.subprocesos.sort(
+        (a,b) => a.orden_subproceso - b.orden_subproceso
+      );
 
-      if(proceso.orden_proceso >= 1 && proceso.orden_proceso <= 3){
-        pintarTarjeta(proceso, "estrategico");
-      }
-      else if(proceso.orden_proceso >= 4 && proceso.orden_proceso <= 6){
-        pintarTarjeta(proceso, "operativo");
-      }
-      else{
-        pintarLineaApoyo(proceso);
+      if(proceso.orden_proceso <= 3){
+
+        pintarTarjeta(proceso,"estrategico");
+
+      }else if(proceso.orden_proceso <= 6){
+
+        pintarTarjeta(proceso,"operativo");
+
+      }else{
+
+        pintarApoyo(proceso);
       }
 
-    });
+  });
+
 }
 
-function pintarTarjeta(proceso, contenedorId){
+/* ====================================================== */
+/* TARJETAS */
+/* ====================================================== */
+
+function pintarTarjeta(proceso,contenedorId){
 
   const contenedor = document.getElementById(contenedorId);
 
-  const tarjeta = document.createElement("div");
-  tarjeta.className = "proceso";
-
-  let subprocesosHtml = "";
+  let htmlSub = "";
 
   proceso.subprocesos.forEach(sub => {
-    subprocesosHtml += `
+
+    htmlSub += `
       <div class="subproceso">
+
         ${sub.orden_subproceso}. ${sub.subproceso_descripcion}
-        <span class="area-nota">(${sub.area_descripcion})</span>
+
+        <span class="area-inline">
+          (${sub.area_descripcion})
+        </span>
+
       </div>
     `;
   });
 
-  tarjeta.innerHTML = `
+  const div = document.createElement("div");
+
+  div.className = "proceso";
+
+  div.innerHTML = `
+
     <div class="proceso-header">
-      <span class="numero">${proceso.orden_proceso}</span>
+
+      <span class="numero">
+        ${proceso.orden_proceso}
+      </span>
+
       ${proceso.proceso_descripcion}
+
     </div>
 
     <div class="subprocesos">
-      ${subprocesosHtml}
+
+      ${htmlSub}
+
     </div>
+
   `;
 
-  contenedor.appendChild(tarjeta);
+  contenedor.appendChild(div);
 }
 
-function pintarLineaApoyo(proceso){
+/* ====================================================== */
+/* APOYO */
+/* ====================================================== */
+
+function pintarApoyo(proceso){
 
   const contenedor = document.getElementById("apoyo");
 
-  const linea = document.createElement("div");
-  linea.className = "linea-apoyo";
+  let detalle = "";
 
-  let detalleHtml = "";
+  proceso.subprocesos.forEach(sub => {
 
-  proceso.subprocesos.forEach((sub, index) => {
+    detalle += `
 
-    if(index > 0){
-      detalleHtml += " · ";
-    }
+      <span class="item-apoyo">
 
-    detalleHtml += `
-      ${sub.subproceso_descripcion}
-      <span class="area-apoyo">(${sub.area_descripcion})</span>
+        — ${sub.subproceso_descripcion}
+
+        <span class="area-apoyo">
+          (${sub.area_descripcion})
+        </span>
+
+      </span>
+
     `;
   });
 
-  linea.innerHTML = `
-    <div class="codigo-proceso">${proceso.orden_proceso}.</div>
+  const div = document.createElement("div");
+
+  div.className = "linea-apoyo";
+
+  div.innerHTML = `
+
+    <div class="codigo-proceso">
+
+      ${proceso.orden_proceso}.
+
+    </div>
 
     <div class="titulo-proceso">
+
       ${proceso.proceso_descripcion}
+
     </div>
 
     <div class="detalle-proceso">
-      — ${detalleHtml}
+
+      ${detalle}
+
     </div>
+
   `;
 
-  contenedor.appendChild(linea);
+  contenedor.appendChild(div);
 }
 
+/* ====================================================== */
+/* INICIO */
+/* ====================================================== */
+
 cargarExcel();
+
 </script>
 
 </body>
