@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mapa de Procesos</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+:root{
+  --azul-principal:#0f2f57;
+  --azul-suave:#eaf2fb;
+  --verde-principal:#008c72;
+  --verde-suave:#e8f7f2;
+  --dorado:#c9a646;
+  --dorado-suave:#fbf6e6;
+  --gris-texto:#263746;
+  --gris-nota:#6b7280;
+}
+
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#f4f6f8;
+  color:var(--gris-texto);
+}
+
+.contenedor{
+  max-width:1400px;
+  margin:25px auto;
+  padding:25px;
+}
+
+.titulo{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.titulo h1{
+  margin:0;
+  font-size:34px;
+  color:var(--azul-principal);
+}
+
+.titulo p{
+  margin-top:8px;
+  color:#64748b;
+}
+
+.bloque{
+  background:#ffffff;
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:28px;
+  box-shadow:0 8px 20px rgba(15,23,42,0.08);
+}
+
+.bloque h2{
+  margin-top:0;
+  margin-bottom:18px;
+  font-size:19px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.estrategico{
+  border-left:8px solid var(--azul-principal);
+}
+
+.operativo{
+  border-left:8px solid var(--verde-principal);
+}
+
+.apoyo{
+  border-left:8px solid var(--dorado);
+  background:var(--dorado-suave);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+}
+
+.proceso{
+  background:#ffffff;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid #dbe3ef;
+}
+
+.proceso-header{
+  padding:14px 16px;
+  color:white;
+  font-weight:bold;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.estrategico .proceso-header{
+  background:var(--azul-principal);
+}
+
+.operativo .proceso-header{
+  background:var(--verde-principal);
+}
+
+.numero{
+  background:white;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+.estrategico .numero{
+  color:var(--azul-principal);
+}
+
+.operativo .numero{
+  color:var(--verde-principal);
+}
+
+.subprocesos{
+  padding:14px 16px;
+}
+
+.subproceso{
+  padding:10px 12px;
+  border-radius:9px;
+  margin-bottom:9px;
+  font-size:14px;
+}
+
+.estrategico .subproceso{
+  background:var(--azul-suave);
+  border-left:4px solid var(--azul-principal);
+}
+
+.operativo .subproceso{
+  background:var(--verde-suave);
+  border-left:4px solid var(--verde-principal);
+}
+
+.area-nota{
+  margin-left:6px;
+  font-size:12px;
+  font-style:italic;
+  color:var(--gris-nota);
+}
+
+.apoyo-vertical{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.linea-apoyo{
+  display:grid;
+  grid-template-columns:70px 320px 1fr;
+  align-items:start;
+  background:#ffffff;
+  border:1px solid var(--dorado);
+  border-radius:8px;
+  padding:12px 16px;
+}
+
+.codigo-proceso{
+  font-size:22px;
+  font-weight:bold;
+  color:#8a6b12;
+}
+
+.titulo-proceso{
+  font-size:18px;
+  font-weight:bold;
+  color:var(--azul-principal);
+}
+
+.detalle-proceso{
+  font-size:15px;
+  color:#374151;
+  line-height:1.5;
+}
+
+.area-apoyo{
+  display:block;
+  margin-top:2px;
+  font-size:12px;
+  font-style:italic;
+  color:var(--gris-nota);
+}
+
+.mensaje{
+  padding:15px;
+  background:#fff3cd;
+  border:1px solid #facc15;
+  border-radius:10px;
+  color:#78350f;
+  margin-bottom:20px;
+  display:none;
+}
+
+@media(max-width:900px){
+  .linea-apoyo{
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+  <div class="titulo">
+    <h1>Mapa de Procesos</h1>
+    <p>Representación general de procesos, subprocesos y áreas responsables</p>
+  </div>
+
+  <div id="mensaje" class="mensaje"></div>
+
+  <section class="bloque estrategico">
+    <h2>Procesos Estratégicos</h2>
+    <div id="estrategico" class="grid"></div>
+  </section>
+
+  <section class="bloque operativo">
+    <h2>Procesos Operativos</h2>
+    <div id="operativo" class="grid"></div>
+  </section>
+
+  <section class="bloque apoyo">
+    <h2>Procesos de Apoyo</h2>
+    <div id="apoyo" class="apoyo-vertical"></div>
+  </section>
+
+</div>
+
+<script>
+const ARCHIVO_EXCEL = "mapa_proceso.xlsx";
+
+async function cargarExcel(){
+  try{
+    const respuesta = await fetch(ARCHIVO_EXCEL);
+
+    if(!respuesta.ok){
+      throw new Error("No se encontró el archivo Excel: " + ARCHIVO_EXCEL);
+    }
+
+    const datos = await respuesta.arrayBuffer();
+    const libro = XLSX.read(datos, { type:"array" });
+
+    const hoja = libro.Sheets[libro.SheetNames[0]];
+    const filas = XLSX.utils.sheet_to_json(hoja);
+
+    construirMapa(filas);
+
+  }catch(error){
+    const mensaje = document.getElementById("mensaje");
+    mensaje.style.display = "block";
+    mensaje.innerHTML =
+      "No se pudo cargar el Excel. Verifica que el archivo <b>" +
+      ARCHIVO_EXCEL +
+      "</b> esté en la misma carpeta del HTML. Si lo abres directamente con doble clic, puede fallar; es mejor abrirlo desde Live Server o desde el servidor web.";
+    console.error(error);
+  }
+}
+
+function construirMapa(filas){
+
+  const procesos = {};
+
+  filas.forEach(fila => {
+
+    const ordenProceso = Number(fila.orden_proceso);
+    const proceso = fila.proceso_descripcion;
+
+    if(!procesos[ordenProceso]){
+      procesos[ordenProceso] = {
+        orden_proceso: ordenProceso,
+        proceso_descripcion: proceso,
+        subprocesos:[]
+      };
+    }
+
+    procesos[ordenProceso].subprocesos.push({
+      orden_subproceso: Number(fila.orden_subproceso),
+      subproceso_descripcion: fila.subproceso_descripcion,
+      area_descripcion: fila.area_descripcion || ""
+    });
+
+  });
+
+  Object.values(procesos)
+    .sort((a,b) => a.orden_proceso - b.orden_proceso)
+    .forEach(proceso => {
+
+      proceso.subprocesos.sort((a,b) => a.orden_subproceso - b.orden_subproceso);
+
+      if(proceso.orden_proceso >= 1 && proceso.orden_proceso <= 3){
+        pintarTarjeta(proceso, "estrategico");
+      }
+      else if(proceso.orden_proceso >= 4 && proceso.orden_proceso <= 6){
+        pintarTarjeta(proceso, "operativo");
+      }
+      else{
+        pintarLineaApoyo(proceso);
+      }
+
+    });
+}
+
+function pintarTarjeta(proceso, contenedorId){
+
+  const contenedor = document.getElementById(contenedorId);
+
+  const tarjeta = document.createElement("div");
+  tarjeta.className = "proceso";
+
+  let subprocesosHtml = "";
+
+  proceso.subprocesos.forEach(sub => {
+    subprocesosHtml += `
+      <div class="subproceso">
+        ${sub.orden_subproceso}. ${sub.subproceso_descripcion}
+        <span class="area-nota">(${sub.area_descripcion})</span>
+      </div>
+    `;
+  });
+
+  tarjeta.innerHTML = `
+    <div class="proceso-header">
+      <span class="numero">${proceso.orden_proceso}</span>
+      ${proceso.proceso_descripcion}
+    </div>
+
+    <div class="subprocesos">
+      ${subprocesosHtml}
+    </div>
+  `;
+
+  contenedor.appendChild(tarjeta);
+}
+
+function pintarLineaApoyo(proceso){
+
+  const contenedor = document.getElementById("apoyo");
+
+  const linea = document.createElement("div");
+  linea.className = "linea-apoyo";
+
+  let detalleHtml = "";
+
+  proceso.subprocesos.forEach((sub, index) => {
+
+    if(index > 0){
+      detalleHtml += " · ";
+    }
+
+    detalleHtml += `
+      ${sub.subproceso_descripcion}
+      <span class="area-apoyo">(${sub.area_descripcion})</span>
+    `;
+  });
+
+  linea.innerHTML = `
+    <div class="codigo-proceso">${proceso.orden_proceso}.</div>
+
+    <div class="titulo-proceso">
+      ${proceso.proceso_descripcion}
+    </div>
+
+    <div class="detalle-proceso">
+      — ${detalleHtml}
+    </div>
+  `;
+
+  contenedor.appendChild(linea);
+}
+
+cargarExcel();
+</script>
+
+</body>
+</html>
