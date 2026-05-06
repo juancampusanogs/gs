@@ -272,12 +272,12 @@ body{
 /* ====================================================== */
 
 .item-apoyo{
-
-  display:inline-block;
-
-  margin-right:14px;
-
-  margin-bottom:4px;
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  margin-right:10px;
+  margin-bottom:2px;
+  white-space:nowrap;
 }
 
 /* ====================================================== */
@@ -285,18 +285,17 @@ body{
 /* ====================================================== */
 
 .area-apoyo{
-
   display:block;
-
   margin-top:1px;
-
-  font-size:12px;
-
+  font-size:11px;
   font-style:italic;
-
-  color:var(--gris-nota);
+  color:#6b7280;
+  line-height:1;
 }
 
+  .separador-apoyo{
+  margin-right:10px;
+}
 /* ====================================================== */
 /* RESPONSIVE */
 /* ====================================================== */
@@ -512,22 +511,19 @@ function pintarApoyo(proceso){
 
   const contenedor = document.getElementById("apoyo");
 
-  let detalle = "";
+  let detalle = "— ";
 
-  proceso.subprocesos.forEach(sub => {
+  proceso.subprocesos.forEach((sub, index) => {
+
+    if(index > 0){
+      detalle += `<span class="separador-apoyo"> · </span>`;
+    }
 
     detalle += `
-
       <span class="item-apoyo">
-
-        — ${sub.subproceso_descripcion}
-
-        <span class="area-apoyo">
-          (${sub.area_descripcion})
-        </span>
-
+        <span>${sub.subproceso_descripcion}</span>
+        <span class="area-apoyo">(${sub.area_descripcion})</span>
       </span>
-
     `;
   });
 
@@ -538,21 +534,15 @@ function pintarApoyo(proceso){
   div.innerHTML = `
 
     <div class="codigo-proceso">
-
       ${proceso.orden_proceso}.
-
     </div>
 
     <div class="titulo-proceso">
-
       ${proceso.proceso_descripcion}
-
     </div>
 
     <div class="detalle-proceso">
-
       ${detalle}
-
     </div>
 
   `;
